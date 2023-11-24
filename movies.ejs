@@ -22,7 +22,7 @@
 
   <h1>Top Movies</h1>
 
-  <form action="/movies/" method="GET">
+  <form action="/movies/" method="POST">
     <label for="genre">Select a genre:</label>
     <select name="genre" id="genre">
       <option value="28">Action</option>
@@ -49,46 +49,6 @@
     <button type="submit">Submit</button>
   </form>
 
-  <script>
-    // Function to get the selected genre ID
-    function getSelectedGenreId() {
-      const genreDropdown = document.getElementById('genre');
-      const selectedGenreId = genreDropdown.value;
-      return selectedGenreId;
-    }
-
-    async function fetchMoviesByGenre(genreId) {
-      const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genreId}`;
-      const options = {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzZDBlN2FiNzhjODUyMjUwMzQ1ODhmODY0ZDNiYmQ4ZiIsInN1YiI6IjY1NWJjOGFhYjU0MDAyMTRkMTE4YTc4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.81S8bZifrVSUhDsHNUgZcRLXLlaqNF4HTEVXQXZL6oE'
-        }
-      };
-
-      try {
-        const response = await fetch(url, options);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const json = await response.json();
-
-        // Display only the first 5 movies
-        const firstFiveMovies = json.results.slice(0, 5);
-        console.log(firstFiveMovies);
-
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Call the fetchMoviesByGenre function with the selected genre ID
-    const genreIdFromClient = getSelectedGenreId();
-    fetchMoviesByGenre(genreIdFromClient);
-  </script>
 
 </body>
 
