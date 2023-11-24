@@ -191,7 +191,7 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
-// Handle movie page form submission
+// Handle movie top in geners 
 app.post('/movies/', async (req, res) => {
 	try {
 	  const { genre } = req.query;
@@ -221,12 +221,35 @@ app.post('/movies/', async (req, res) => {
 	}
   });
   
-
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
-
+// Handle movie top in geners 
+app.post('/series/', async (req, res) => {
+	try {
+	  const { genre } = req.query;
+  
+	  // Fetch the first page and the first 5 movies
+	  const seriesApiBaseUrl = 'https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc';
+	  const seriesApiOptions = {
+		method: 'GET',
+		headers: {
+		  accept: 'application/json',
+		  Authorization: `Bearer ${ACC_TOKEN}`,
+		},
+	  };
+  
+	  const seriesApiUrl = `${seriesApiBaseUrl}&with_genres=${genre}&page=1`;
+	  const response = await fetch(seriesApiUrl, seriesApiOptions);
+	  const json = await response.json();
+  
+	  // Display only the first 5 movies
+	  const firstFiveSeries = json.results.slice(0, 5);
+	  console.log(firstFiveSeries);
+  
+	  res.json(firstFiveSeries);
+	} catch (err) {
+	  console.error('error:', err);
+	  res.status(500).json({ error: 'Internal Server Error' });
+	}
+  });
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
