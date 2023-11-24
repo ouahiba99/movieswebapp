@@ -191,6 +191,42 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
+// Handle movie page form submission
+app.post('/movies/', async (req, res) => {
+	try {
+	  const { genre } = req.query;
+  
+	  // Fetch the first page and the first 5 movies
+	  const movieApiBaseUrl = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc';
+	  const movieApiOptions = {
+		method: 'GET',
+		headers: {
+		  accept: 'application/json',
+		  Authorization: `Bearer ${ACC_TOKEN}`,
+		},
+	  };
+  
+	  const movieApiUrl = `${movieApiBaseUrl}&with_genres=${genre}&page=1`;
+	  const response = await fetch(movieApiUrl, movieApiOptions);
+	  const json = await response.json();
+  
+	  // Display only the first 5 movies
+	  const firstFiveMovies = json.results.slice(0, 5);
+	  console.log(firstFiveMovies);
+  
+	  res.json(firstFiveMovies);
+	} catch (err) {
+	  console.error('error:', err);
+	  res.status(500).json({ error: 'Internal Server Error' });
+	}
+  });
+  
+
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
